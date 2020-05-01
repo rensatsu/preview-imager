@@ -53,6 +53,35 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: preview-imager
+          path: preview-imager/
+
+      - name: Set permissions
+        run: chmod +x preview-imager/preview-imager
 
       - name: List artifact structure
-        run: ls -alhR
+        run: ls -alhR preview-imager/
+
+      - name: Pack all files
+        run: tar czvf preview-imager.tar.gz preview-imager/
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./preview-imager.tar.gz
+          asset_name: preview-imager.tar.gz
+          asset_content_type: application/gzip

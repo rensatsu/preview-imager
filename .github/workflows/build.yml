@@ -6,6 +6,7 @@ on:
 
 jobs:
   build:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     name: Build
     runs-on: ubuntu-latest
     steps:
@@ -41,28 +42,3 @@ jobs:
       with:
         name: preview-imager
         path: dist/
-  publish:
-    name: Publish
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download a Build Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: preview-imager
-          path: preview-imager/
-
-      - name: Set permissions
-        run: chmod +x preview-imager/preview-imager
-
-      - name: List artifact structure
-        run: ls -alhR preview-imager/
-
-      - name: Pack all files
-        run: tar czvf preview-imager.tar.gz preview-imager/
-
-      - name: Upload a Publish Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: preview-imager_published
-          path: preview-imager.tar.gz
