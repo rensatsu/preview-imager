@@ -36,9 +36,6 @@ jobs:
     - name: Copy fonts
       run: cp -r fonts dist/
 
-    - name: Set permissions
-      run: chmod +x dist/preview-imager
-
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2
       with:
@@ -53,6 +50,19 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: preview-imager
+          path: dist/
+
+      - name: Set permissions
+        run: chmod +x dist/preview-imager
 
       - name: List artifact structure
-        run: ls -alhR
+        run: ls -alhR dist/
+
+      - name: Pack all files
+        run: tar czvf preview-imager.tar.gz dist/
+
+      - name: Upload a Publish Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: preview-imager_published
+          path: preview-imager.tar.gz
