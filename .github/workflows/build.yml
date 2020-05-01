@@ -59,7 +59,7 @@ jobs:
         run: ls -alhR dist/
 
       - name: Pack all files
-        run: tar czvf preview-imager.tar.gz dist/
+        run: tar czvf preview-imager.tar.gz --strip-components=1 dist/
 
       - name: Upload a Publish Artifact
         uses: actions/upload-artifact@v2
