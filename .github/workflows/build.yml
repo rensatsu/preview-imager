@@ -28,8 +28,12 @@ jobs:
             dep ensure
         fi
 
+    - name: Prepare output directory
+      run: |
+        mkdir dist
+
     - name: Build
-      run: go build -v -o dist/ .
+      run: go build -v -o dist/preview-imager .
 
     - name: Copy fonts
       run: |
