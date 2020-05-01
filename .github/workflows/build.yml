@@ -32,7 +32,10 @@ jobs:
       run: go build -v -o dist .
 
     - name: Copy fonts
-      run: cp -r fonts dist/
+      run: |
+        pwd
+        ls -alh
+        cp -r fonts dist/
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2
