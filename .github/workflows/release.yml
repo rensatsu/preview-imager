@@ -1,8 +1,9 @@
-name: Build app
+name: Release app
 
 on:
   push:
-    branches: [ master ]
+    tags:
+    - 'v*'
 
 jobs:
   build:
@@ -44,9 +45,8 @@ jobs:
       with:
         name: preview-imager
         path: dist/
-  publish:
-    name: Publish
-    needs: build
+  release:
+    name: Release
     runs-on: ubuntu-latest
     steps:
       - name: Download a Build Artifact
