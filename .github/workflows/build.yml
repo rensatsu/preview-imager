@@ -32,7 +32,7 @@ jobs:
       run: mkdir dist
 
     - name: Build
-      run: go build -v -o dist/preview-imager .
+      run: go build -v -o dist/preview-imager ./go
 
     - name: Copy fonts
       run: cp -r fonts dist/

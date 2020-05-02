@@ -1,0 +1,31 @@
+{
+  "name": "@rensatsu/preview-imager",
+  "version": "1.0.0",
+  "description": "Generate Image Previews",
+  "main": "index.js",
+  "scripts": {
+    "prepack": "bash build-go-dep.sh",
+    "test": "echo \"Error: no test specified\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rensatsu/preview-imager.git"
+  },
+  "author": "Rensatsu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rensatsu/preview-imager/issues"
+  },
+  "keywords": [
+    "preview",
+    "image-processing",
+    "golang"
+  ],
+  "files": [
+    "dist/",
+    "indedx.js",
+    "package.json"
+  ],
+  "homepage": "https://github.com/rensatsu/preview-imager#readme",
+  "dependencies": {}
+}

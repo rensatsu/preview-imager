@@ -9,10 +9,7 @@ import "github.com/disintegration/imaging"
 import "os"
 import "errors"
 
-// Inspiration:
-// https://github.com/montanaflynn/meme-generator/blob/master/main.go
-
-func initImage(width uint, height uint, imagePath string, colorBg string, colorBgOverlay string) *gg.Context {
+func initImage(width uint, height uint, imagePath string, colorBg string, colorBgOverlay string, blurStrength float64) *gg.Context {
 	ctx := gg.NewContext(int(width), int(height))
 
 	if len(imagePath) == 0 {
@@ -31,7 +28,9 @@ func initImage(width uint, height uint, imagePath string, colorBg string, colorB
 			panic(err)
 		}
 
-		bgImageRes := imaging.Blur(imaging.Fill(imageData, int(width), int(height), imaging.Center, imaging.Lanczos), 3)
+		bgImageRes := imaging.Blur(
+			imaging.Fill(imageData, int(width), int(height), imaging.Center, imaging.Lanczos),
+			blurStrength)
 		ctx.DrawImage(bgImageRes, 0, 0)
 		ctx.DrawRectangle(0, 0, float64(width), float64(height))
 		ctx.SetHexColor(colorBgOverlay)
@@ -63,24 +62,28 @@ func drawLogo(img *gg.Context, logoPath string, x int, y int) {
 func main() {
 	fmt.Fprintln(os.Stderr, "Preview Imager by Rensatsu")
 
-	colorBg := flag.String("color-bg", "#000000", "Background color")
-	colorBgOverlay := flag.String("color-bg-overlay", "#000000", "Background color overlay (overlay on the image)")
-	colorFg := flag.String("color-fg", "#ffffff", "Text (foreground) color")
-	siteName := flag.String("site-name", "", "Site name")
+	colorBg := flag.String("colorBg", "#000000", "Background color")
+	colorBgOverlay := flag.String("colorBgOverlay", "#000000", "Background color overlay (overlay on the image)")
+	colorFg := flag.String("colorFg", "#ffffff", "Text (foreground) color")
+	siteName := flag.String("siteName", "", "Site name")
 	title := flag.String("title", "", "Article title")
-	imagePath := flag.String("image", "", "Image path")
-	logoPath := flag.String("logo-image", "", "Logo image path")
-	logoX := flag.Int("logo-x", 0, "Logo image X")
-	logoY := flag.Int("logo-y", 0, "Logo image Y")
-	targetPath := flag.String("target", "out.png", "Image path, use - for stdout")
+	imagePath := flag.String("imagePath", "", "Image path")
+	logoPath := flag.String("logoPath", "", "Logo image path")
+	logoX := flag.Int("logoX", 0, "Logo image X")
+	logoY := flag.Int("logoY", 0, "Logo image Y")
+	targetPath := flag.String("targetPath", "out.png", "Image path, use - for stdout")
 	width := flag.Uint("width", 600, "Output image width")
 	height := flag.Uint("height", 300, "Output image height")
-	paddingX := flag.Float64("padding-x", 0, "Padding X")
-	paddingY := flag.Float64("padding-y", 0, "Padding Y")
-	lineSpacing := flag.Float64("line-spacing", 1, "Title text line spacing")
-	fontSize := flag.Uint("font-size", 36, "Font size for title")
-	fontSizeSite := flag.Uint("font-size-site", 20, "Font size for site name")
-	paddingYSite := flag.Uint("padding-y-site", 0, "Padding Y for site name")
+	paddingX := flag.Float64("paddingX", 0, "Padding X")
+	paddingY := flag.Float64("paddingY", 0, "Padding Y")
+	lineSpacing := flag.Float64("lineSpacing", 1, "Title text line spacing")
+	fontSize := flag.Uint("fontSize", 36, "Font size for title")
+	fontSizeSite := flag.Uint("fontSizeSite", 20, "Font size for site name")
+	paddingYSite := flag.Uint("paddingYSite", 0, "Padding Y for site name")
+	blurStrength := flag.Float64("blurStrength", 3, "Blur strength")
+
+	fontTitle := flag.String("fontTitle", "", "Font for title")
+	fontSiteName := flag.String("fontSiteName", "", "Font for site name")
 
 	flag.Parse()
 
@@ -92,15 +95,19 @@ func main() {
 	fmt.Fprintf(os.Stderr, "Color Text: %s\n", *colorFg)
 	fmt.Fprintf(os.Stderr, "Title: %s\n", *title)
 	fmt.Fprintf(os.Stderr, "Site Name: %s\n", *siteName)
+	fmt.Fprintf(os.Stderr, "Image path: %s\n", *imagePath)
+	fmt.Fprintf(os.Stderr, "Logo image path: %s\n", *logoPath)
 
 	maxWidth := float64(*width) - 2*(*paddingX)
 
-	img := initImage(*width, *height, *imagePath, *colorBg, *colorBgOverlay)
+	img := initImage(*width, *height, *imagePath, *colorBg, *colorBgOverlay, *blurStrength)
 	drawLogo(img, *logoPath, *logoX, *logoY)
 
-	err := img.LoadFontFace("fonts/IBMPlexSans-Bold.ttf", float64(*fontSize))
-	if err != nil {
-		panic(err)
+	if len(*fontTitle) > 0 {
+		err := img.LoadFontFace(*fontTitle, float64(*fontSize))
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	img.SetHexColor(*colorFg)
@@ -115,9 +122,11 @@ func main() {
 		gg.AlignLeft)
 
 	if len(*siteName) > 0 {
-		err := img.LoadFontFace("fonts/IBMPlexSans-Regular.ttf", float64(*fontSizeSite))
-		if err != nil {
-			panic(err)
+		if len(*fontSiteName) > 0 {
+			err := img.LoadFontFace(*fontSiteName, float64(*fontSizeSite))
+			if err != nil {
+				panic(err)
+			}
 		}
 
 		img.DrawString(*siteName, float64(*logoX), float64(*height)-float64(*paddingYSite))
