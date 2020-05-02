@@ -1,7 +1,9 @@
 # Preview Imager
 
+Generate Image Previews for Open Graph tags.
+
 ## Usage
-Install any ttf font (`npm install --save @ibm/plex).
+Install any ttf font (`npm install --save @ibm/plex`).
 
 ```js
 const { PreviewImager } = require("@rensatsu/preview-imager");
