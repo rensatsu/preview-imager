@@ -23,7 +23,7 @@
   ],
   "files": [
     "dist/",
-    "indedx.js",
+    "index.js",
     "package.json"
   ],
   "homepage": "https://github.com/rensatsu/preview-imager#readme",
