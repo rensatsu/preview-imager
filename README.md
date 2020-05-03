@@ -2,6 +2,10 @@
 
 Generate Image Previews for Open Graph tags.
 
+## Example
+
+![Image of an example][image-example]
+
 ## Usage
 Install any ttf font (`npm install --save @ibm/plex`).
 
@@ -37,3 +41,5 @@ const fontPath = path.join(
     });
 })();
 ```
+
+[image-example]: https://cdn.jsdelivr.net/gh/rensatsu/preview-imager@latest/.repository/screenshot-1.png
