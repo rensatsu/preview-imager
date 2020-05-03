@@ -34,9 +34,6 @@ jobs:
     - name: Build
       run: go build -v -o dist/preview-imager ./go
 
-    - name: Copy fonts
-      run: cp -r fonts dist/
-
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2
       with:
