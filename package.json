@@ -1,6 +1,6 @@
 {
   "name": "@rensatsu/preview-imager",
-  "version": "1.2.2",
+  "version": "1.3.0",
   "description": "Generate Image Previews",
   "main": "index.js",
   "scripts": {
